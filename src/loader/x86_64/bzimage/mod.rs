@@ -17,7 +17,7 @@ use std::io::{Read, Seek, SeekFrom};
 
 use vm_memory::{Address, Bytes, GuestAddress, GuestMemory, GuestUsize};
 
-use super::{
+use super::super::{
     bootparam, struct_util, Error as KernelLoaderError, KernelLoader, KernelLoaderResult, Result,
 };
 

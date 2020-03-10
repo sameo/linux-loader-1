@@ -18,7 +18,9 @@ use std::mem;
 
 use vm_memory::{Address, Bytes, GuestAddress, GuestMemory, GuestUsize};
 
-use super::{struct_util, Error as KernelLoaderError, KernelLoader, KernelLoaderResult, Result};
+use super::super::{
+    struct_util, Error as KernelLoaderError, KernelLoader, KernelLoaderResult, Result,
+};
 
 #[allow(dead_code)]
 #[allow(non_camel_case_types)]
@@ -178,7 +180,7 @@ impl KernelLoader for Elf {
 
         if let Some(addr) = highmem_start_address {
             if (ehdr.e_entry as u64) < addr.raw_value() {
-                Err(Error::InvalidEntryAddress)?;
+                return Err(Error::InvalidEntryAddress.into());
             }
         }
 
@@ -300,7 +302,7 @@ where
     // The PVH entry point is a 32-bit address, so the descriptor field
     // must be capable of storing all such addresses.
     if (nhdr.n_descsz as usize) < mem::size_of::<u32>() {
-        Err(Error::InvalidPvhNote)?;
+        return Err(Error::InvalidPvhNote.into());
     }
 
     let mut pvh_addr_bytes = [0; mem::size_of::<u32>()];

@@ -9,7 +9,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0 AND BSD-3-Clause
 
-//! Traits and Structs
+//! Traits and Structs for loading kernels into guest memory.
 //! - [KernelLoader](trait.KernelLoader.html): load kernel image into guest memory
 //! - [KernelLoaderResult](struct.KernelLoaderResult.html): the structure which loader
 //! returns to VMM to assist zero page construction and boot environment setup
@@ -33,23 +33,24 @@ use vm_memory::{Address, Bytes, GuestAddress, GuestMemory, GuestUsize};
 #[cfg_attr(feature = "cargo-clippy", allow(clippy::all))]
 pub mod bootparam;
 
-#[cfg(all(feature = "elf", any(target_arch = "x86", target_arch = "x86_64")))]
-pub mod elf;
-
-#[cfg(all(feature = "bzimage", any(target_arch = "x86", target_arch = "x86_64")))]
-pub mod bzimage;
-
+#[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
 mod struct_util;
 
-#[cfg(all(feature = "elf", any(target_arch = "x86", target_arch = "x86_64")))]
-pub use elf::Elf;
-#[cfg(all(feature = "elf", any(target_arch = "x86", target_arch = "x86_64")))]
-pub use elf::Error as ElfError;
+#[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
+mod x86_64;
+
+#[cfg(target_arch = "aarch64")]
+mod aarch64;
 
 #[cfg(all(feature = "bzimage", any(target_arch = "x86", target_arch = "x86_64")))]
-pub use bzimage::BzImage;
+pub use x86_64::bzimage::BzImage;
 #[cfg(all(feature = "bzimage", any(target_arch = "x86", target_arch = "x86_64")))]
-pub use bzimage::Error as BzImageError;
+pub use x86_64::bzimage::Error as BzImageError;
+
+#[cfg(all(feature = "elf", any(target_arch = "x86", target_arch = "x86_64")))]
+pub use x86_64::elf::Elf;
+#[cfg(all(feature = "elf", any(target_arch = "x86", target_arch = "x86_64")))]
+pub use x86_64::elf::Error as ElfError;
 
 #[derive(Debug, PartialEq)]
 /// Kernel loader errors.
