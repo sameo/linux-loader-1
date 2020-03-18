@@ -48,6 +48,8 @@ pub use x86_64::bzimage::BzImage;
 pub use x86_64::bzimage::Error as BzImageError;
 
 #[cfg(all(feature = "elf", any(target_arch = "x86", target_arch = "x86_64")))]
+pub use x86_64::elf::start_info;
+#[cfg(all(feature = "elf", any(target_arch = "x86", target_arch = "x86_64")))]
 pub use x86_64::elf::Elf;
 #[cfg(all(feature = "elf", any(target_arch = "x86", target_arch = "x86_64")))]
 pub use x86_64::elf::Error as ElfError;
